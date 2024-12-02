@@ -1,0 +1,47 @@
+from PIL import Image, ImageDraw, ImageFont
+import os
+
+def create_image_with_text(output_path, text, image_size=(800, 400), font_size=40, bg_color=(255, 255, 255), text_color=(0, 0, 0)):
+    """
+    Automates image creation with text overlay.
+    :param output_path: Path to save the generated image.
+    :param text: Text to include in the image.
+    :param image_size: Tuple specifying the size of the image (width, height).
+    :param font_size: Font size of the text.
+    :param bg_color: Background color of the image (RGB tuple).
+    :param text_color: Color of the text (RGB tuple).
+    """
+    try:
+        # Create a blank image
+        img = Image.new('RGB', image_size, bg_color)
+        draw = ImageDraw.Draw(img)
+
+        # Load a font
+        font_path = "arial.ttf"  # Update this to a path where you have a .ttf font file
+        if not os.path.exists(font_path):
+            font = ImageFont.load_default()  # Fallback to default font
+        else:
+            font = ImageFont.truetype(font_path, font_size)
+
+        # Get the size of the text
+        text_width, text_height = draw.textsize(text, font=font)
+
+        # Calculate position to center the text
+        x = (image_size[0] - text_width) // 2
+        y = (image_size[1] - text_height) // 2
+
+        # Draw the text onto the image
+        draw.text((x, y), text, fill=text_color, font=font)
+
+        # Save the image
+        img.save(output_path)
+        print(f"Image saved at {output_path}")
+
+    except Exception as e:
+        print(f"Error creating image: {e}")
+
+# Example Usage
+if __name__ == "__main__":
+    output_path = "output_image.jpg"
+    text = "Hello, Twitter!"
+    create_image_with_text(output_path, text)
