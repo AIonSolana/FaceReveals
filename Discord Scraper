@@ -1,0 +1,33 @@
+import discord
+from discord.ext import commands
+
+# Discord Bot Token (replace with your bot's token)
+TOKEN = 'your-bot-token'
+
+# Define intents to allow message reading (only in allowed channels)
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+
+# Initialize the bot
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user}')
+
+@bot.event
+async def on_message(message):
+    # Avoid logging the bot's own messages
+    if message.author == bot.user:
+        return
+
+    # Log message content
+    print(f"Message from {message.author}: {message.content}")
+
+    # Save to a file (optional)
+    with open("message_log.txt", "a") as log_file:
+        log_file.write(f"{message.author}: {message.content}\n")
+
+# Run the bot
+bot.run(TOKEN)
