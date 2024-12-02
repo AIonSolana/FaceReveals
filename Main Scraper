@@ -1,0 +1,44 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+
+# Configure the WebDriver
+driver = webdriver.Chrome(executable_path="path_to_chromedriver")
+
+def scrape_profile(url):
+    """
+    Automates the login process and scrapes your profile information.
+    """
+    try:
+        # Open the dating app URL (replace with the actual URL)
+        driver.get(url)
+
+        # Example: Log in (adjust selectors to match the app's login page)
+        email_input = driver.find_element(By.ID, "email")
+        email_input.send_keys("your-email@example.com")
+        password_input = driver.find_element(By.ID, "password")
+        password_input.send_keys("your-password")
+        login_button = driver.find_element(By.ID, "login")
+        login_button.click()
+
+        # Wait for the profile page to load
+        time.sleep(5)
+
+        # Extract profile information (adjust selectors as needed)
+        profile_name = driver.find_element(By.CLASS_NAME, "profile-name").text
+        profile_bio = driver.find_element(By.CLASS_NAME, "profile-bio").text
+
+        # Print or save the data
+        print(f"Name: {profile_name}")
+        print(f"Bio: {profile_bio}")
+
+        # Save to a file
+        with open("profile_data.txt", "w") as file:
+            file.write(f"Name: {profile_name}\nBio: {profile_bio}\n")
+
+    finally:
+        # Close the browser
+        driver.quit()
+
+# Example Usage
+scrape_profile("https://example-dating-app.com/login")
