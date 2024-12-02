@@ -1,0 +1,41 @@
+import random
+import requests
+
+def get_dynamic_prompt():
+    """
+    Generates a dynamic prompt for AI image creation.
+    Combines random ideas, trending topics, or data from APIs.
+    """
+    # Static themes and ideas
+    themes = ["futuristic", "surreal", "minimalist", "nature-inspired", "vibrant"]
+    objects = ["cityscape", "forest", "ocean", "mountains", "space station"]
+    styles = ["in watercolor", "in 3D render", "as a painting", "with neon lights", "in anime style"]
+
+    # Combine random elements
+    theme = random.choice(themes)
+    obj = random.choice(objects)
+    style = random.choice(styles)
+    base_prompt = f"A {theme} {obj} {style}"
+
+    # Fetch trending topics from an external API (example: Twitter trends API or News API)
+    try:
+        # Replace with your API key and endpoint for a trending topics API
+        # Example: News API (https://newsapi.org/)
+        response = requests.get(
+            "https://newsapi.org/v2/top-headlines",
+            params={"apiKey": "your-news-api-key", "country": "us", "category": "general"},
+        )
+        if response.status_code == 200:
+            news_data = response.json()
+            if news_data["articles"]:
+                headline = random.choice(news_data["articles"])["title"]
+                base_prompt += f" inspired by '{headline}'"
+    except Exception as e:
+        print(f"Error fetching trending topics: {e}")
+
+    return base_prompt
+
+# Example Usage
+if __name__ == "__main__":
+    prompt = get_dynamic_prompt()
+    print(f"Generated Prompt: {prompt}")
