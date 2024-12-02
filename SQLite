@@ -1,0 +1,29 @@
+import sqlite3
+
+def setup_database(db_name="themes.db"):
+    """
+    Set up the SQLite database with tables for themes, objects, and styles.
+    """
+    conn = sqlite3.connect(db_name)
+    cursor = conn.cursor()
+
+    # Create tables
+    cursor.execute("CREATE TABLE IF NOT EXISTS themes (id INTEGER PRIMARY KEY, name TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS objects (id INTEGER PRIMARY KEY, name TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS styles (id INTEGER PRIMARY KEY, name TEXT)")
+
+    # Insert sample data if tables are empty
+    if not cursor.execute("SELECT COUNT(*) FROM themes").fetchone()[0]:
+        cursor.executemany("INSERT INTO themes (name) VALUES (?)", [("futuristic",), ("surreal",), ("minimalist",), ("nature-inspired",), ("vibrant",)])
+    if not cursor.execute("SELECT COUNT(*) FROM objects").fetchone()[0]:
+        cursor.executemany("INSERT INTO objects (name) VALUES (?)", [("cityscape",), ("forest",), ("ocean",), ("mountains",), ("space station",)])
+    if not cursor.execute("SELECT COUNT(*) FROM styles").fetchone()[0]:
+        cursor.executemany("INSERT INTO styles (name) VALUES (?)", [("in watercolor",), ("in 3D render",), ("as a painting",), ("with neon lights",), ("in anime style",)])
+
+    conn.commit()
+    conn.close()
+    print("Database setup complete.")
+
+# Run this once to initialize the database
+if __name__ == "__main__":
+    setup_database()
