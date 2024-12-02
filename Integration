@@ -1,0 +1,43 @@
+import openai
+import requests
+import os
+
+# OpenAI API Key (Replace with your own key)
+OPENAI_API_KEY = "your-openai-api-key"
+openai.api_key = OPENAI_API_KEY
+
+def generate_ai_image(prompt, output_path="generated_image.png"):
+    """
+    Generate an AI image using OpenAI's DALL·E and save it locally.
+    :param prompt: Text prompt to generate the image.
+    :param output_path: Path to save the generated image.
+    """
+    try:
+        # Generate the image using DALL·E
+        print("Generating image...")
+        response = openai.Image.create(
+            prompt=prompt,
+            n=1,  # Number of images to generate
+            size="1024x1024",  # Resolution of the image
+        )
+
+        # Extract the URL of the generated image
+        image_url = response['data'][0]['url']
+        print(f"Image generated. URL: {image_url}")
+
+        # Download the image
+        print("Downloading the image...")
+        image_data = requests.get(image_url).content
+        with open(output_path, "wb") as file:
+            file.write(image_data)
+        
+        print(f"Image saved to {output_path}")
+
+    except Exception as e:
+        print(f"Error generating AI image: {e}")
+
+# Example Usage
+if __name__ == "__main__":
+    prompt = "A futuristic cityscape at sunset with flying cars and neon lights."
+    output_path = "ai_generated_image.png"
+    generate_ai_image(prompt, output_path)
